@@ -91,4 +91,4 @@ jobs:
           -n game-ns
 
           kubectl rollout status deployment/train-ticket-deployment \
-          -n train-ticket --timeout=200s
+          -n game-ns --timeout=200s
