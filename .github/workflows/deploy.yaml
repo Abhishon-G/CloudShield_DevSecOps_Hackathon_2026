@@ -88,7 +88,7 @@ jobs:
         run: |
           kubectl set image deployment/train-ticket-deployment \
           train-ticket-container=$ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG \
-          -n train-ticket
+          -n game-ns
 
           kubectl rollout status deployment/train-ticket-deployment \
           -n train-ticket --timeout=200s
