@@ -70,25 +70,25 @@ jobs:
           sudo mv kubectl /usr/local/bin/
 
 
-      - name: Configure kubeconfig
+      - name: Update kubeconfig
         run: |
           aws eks update-kubeconfig \
           --region ${{ secrets.AWS_REGION }} \
           --name ${{ secrets.EKS_CLUSTER_NAME }}
 
 
-      - name: Apply Kubernetes manifests
+      - name: Deploy Kubernetes resources
         run: |
           kubectl apply -f board/k8s/namespace.yaml
-          kubectl apply -f board/k8s/deployment.yaml -n ${{ secrets.K8S_NAMESPACE }}
-          kubectl apply -f board/k8s/service.yaml -n ${{ secrets.K8S_NAMESPACE }}
+          kubectl apply -f board/k8s/deployment.yaml
+          kubectl apply -f board/k8s/service.yaml
 
 
       - name: Update Deployment Image
         run: |
           kubectl set image deployment/train-ticket-deployment \
           train-ticket-container=$ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG \
-          -n ${{ secrets.K8S_NAMESPACE }}
+          -n train-ticket
 
           kubectl rollout status deployment/train-ticket-deployment \
-          -n ${{ secrets.K8S_NAMESPACE }} --timeout=200s
+          -n train-ticket --timeout=200s
